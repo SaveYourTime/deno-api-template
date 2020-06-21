@@ -1,9 +1,12 @@
 import { serve } from "https://deno.land/std@0.58.0/http/server.ts";
 
-const server = serve({ port: 3000 });
+const { HOST, PORT, ORIGIN } = Deno.env.toObject();
 
-console.log("Application is running on: http://localhost:3000");
+const server = serve({ hostname: HOST, port: +PORT });
+
+console.log(`Application is running on: http://${HOST}:${PORT}`);
+console.log(`Accepting requests from origin: "${ORIGIN}"`);
 
 for await (const req of server) {
-  req.respond({ body: "Hello World\n" });
+  req.respond({ body: "Hello World" });
 }
