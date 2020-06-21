@@ -1,8 +1,23 @@
-import { Application } from "https://deno.land/x/oak/mod.ts";
+import { Application, Status, Context } from "https://deno.land/x/oak/mod.ts";
 
 const { HOST, PORT, ORIGIN } = Deno.env.toObject();
 
 const app = new Application();
+
+// Error handling
+app.use(async (ctx: Context, next) => {
+  try {
+    await next();
+    ctx.throw(Status.NotFound, "Page Not Found");
+  } catch (err) {
+    const {
+      status = Status.InternalServerError,
+      message = "Internal server error",
+    } = err;
+    ctx.response.status = status;
+    ctx.response.body = { statusCode: status, message };
+  }
+});
 
 // Logger
 app.use(async (ctx, next) => {
