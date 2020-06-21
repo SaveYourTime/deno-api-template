@@ -1,4 +1,9 @@
-import { Application, Status, Context } from "https://deno.land/x/oak/mod.ts";
+import {
+  Application,
+  Status,
+  Context,
+  send,
+} from "https://deno.land/x/oak/mod.ts";
 
 const { HOST, PORT, ORIGIN } = Deno.env.toObject();
 
@@ -8,7 +13,7 @@ const app = new Application();
 app.use(async (ctx: Context, next) => {
   try {
     await next();
-    ctx.throw(Status.NotFound, "Page Not Found");
+    if (!ctx.response.body) ctx.throw(Status.NotFound, "Page Not Found");
   } catch (err) {
     const {
       status = Status.InternalServerError,
@@ -34,9 +39,16 @@ app.use(async (ctx, next) => {
   ctx.response.headers.set("X-Response-Time", `${ms}ms`);
 });
 
-// Hello World!
-app.use((ctx) => {
-  ctx.response.body = "Hello World!";
+// Static content
+app.use(async (ctx, next) => {
+  try {
+    await send(ctx, ctx.request.url.pathname, {
+      root: `${Deno.cwd()}/public`,
+      index: "index.html",
+    });
+  } catch (err) {
+    await next();
+  }
 });
 
 app.addEventListener("listen", ({ hostname, port, secure }) => {
