@@ -15,7 +15,9 @@ const app = new Application();
 app.use(async (ctx: Context, next) => {
   try {
     await next();
-    if (!ctx.response.body) ctx.throw(Status.NotFound, "Page Not Found");
+    if (ctx.response.status === 404 && !ctx.response.body) {
+      ctx.throw(Status.NotFound, "Page Not Found");
+    }
   } catch (err) {
     const {
       status = Status.InternalServerError,
