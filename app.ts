@@ -6,6 +6,7 @@ import {
 } from "https://deno.land/x/oak/mod.ts";
 import authRoutes from "./routes/auth.ts";
 import todoRoutes from "./routes/todo.ts";
+import isAuth from "./utils/isAuth.ts";
 
 const { HOST, PORT, ORIGIN } = Deno.env.toObject();
 
@@ -29,14 +30,14 @@ app.use(async (ctx: Context, next) => {
 });
 
 // Logger
-app.use(async (ctx, next) => {
+app.use(async (ctx: Context, next) => {
   await next();
   const rt = ctx.response.headers.get("X-Response-Time");
   console.log(`${ctx.request.method} ${ctx.request.url} - ${rt}`);
 });
 
 // Timing
-app.use(async (ctx, next) => {
+app.use(async (ctx: Context, next) => {
   const start = Date.now();
   await next();
   const ms = Date.now() - start;
@@ -44,7 +45,7 @@ app.use(async (ctx, next) => {
 });
 
 // Static content
-app.use(async (ctx, next) => {
+app.use(async (ctx: Context, next) => {
   try {
     await send(ctx, ctx.request.url.pathname, {
       root: `${Deno.cwd()}/public`,
@@ -55,10 +56,8 @@ app.use(async (ctx, next) => {
   }
 });
 
-app.use(authRoutes.routes());
-app.use(authRoutes.allowedMethods());
-app.use(todoRoutes.routes());
-app.use(todoRoutes.allowedMethods());
+app.use(authRoutes.routes(), authRoutes.allowedMethods());
+app.use(isAuth, todoRoutes.routes(), todoRoutes.allowedMethods());
 
 app.addEventListener("listen", ({ hostname, port, secure }) => {
   const URL = `${secure ? "https" : "http"}://${hostname}:${port}`;

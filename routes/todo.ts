@@ -20,7 +20,7 @@ router.get("/:id", (ctx) => {
     ctx.response.body = { todo };
   } else {
     ctx.response.status = Status.NotFound;
-    ctx.response.body = { message: `Todo with ID: '${id}' not found.` };
+    ctx.response.body = { message: `Todo with ID: '${id}' not found` };
   }
 });
 
@@ -36,7 +36,7 @@ router.post("/", async (ctx) => {
     ctx.response.body = { todo };
   } else {
     ctx.response.status = Status.BadRequest;
-    ctx.response.body = { message: `Missing text or status` };
+    ctx.response.body = { message: "text or status not found" };
   }
 });
 
@@ -54,11 +54,11 @@ router.put("/:id", async (ctx) => {
       ctx.response.body = { todo };
     } else {
       ctx.response.status = Status.BadRequest;
-      ctx.response.body = { message: `Todo with ID: '${id}' not found.` };
+      ctx.response.body = { message: `Todo with ID: '${id}' not found` };
     }
   } else {
     ctx.response.status = Status.BadRequest;
-    ctx.response.body = { message: `Missing text or status` };
+    ctx.response.body = { message: "text or status not found" };
   }
 });
 
@@ -70,4 +70,5 @@ router.delete("/:id", (ctx) => {
   }
   ctx.response.status = Status.NoContent;
 });
+
 export default router;

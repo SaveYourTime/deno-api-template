@@ -7,9 +7,12 @@
     }
   },
   "allow": ["env", "net", "read"],
+  "unstable": true,
   "env": {
     "HOST": "localhost",
     "PORT": "3000",
-    "ORIGIN": "*"
+    "ORIGIN": "*",
+    "JWT_SECRET_KEY": "denon_key",
+    "JWT_EXPIRES_IN": "3600000"
   }
 }
