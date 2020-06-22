@@ -4,6 +4,8 @@ import {
   Context,
   send,
 } from "https://deno.land/x/oak/mod.ts";
+import authRoutes from "./routes/auth.ts";
+import todoRoutes from "./routes/todo.ts";
 
 const { HOST, PORT, ORIGIN } = Deno.env.toObject();
 
@@ -50,6 +52,11 @@ app.use(async (ctx, next) => {
     await next();
   }
 });
+
+app.use(authRoutes.routes());
+app.use(authRoutes.allowedMethods());
+app.use(todoRoutes.routes());
+app.use(todoRoutes.allowedMethods());
 
 app.addEventListener("listen", ({ hostname, port, secure }) => {
   const URL = `${secure ? "https" : "http"}://${hostname}:${port}`;
