@@ -21,6 +21,7 @@
 
 - Use **denon** to `monitor` any changes and automatically `restart` the application, also, manage our `environment variables` and `permissions`. (Just like: `nodemon`)
 - Use **oak** to build up the http server. (Just like: `koa`)
+- Use **oakCors** to enable cors.
 - Middlewares like `error handling`, `timing logger` are included.
 - Serving `static files`
 - **bcrypt** for `hashing` user's password
