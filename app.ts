@@ -4,6 +4,7 @@ import {
   Context,
   send,
 } from "https://deno.land/x/oak/mod.ts";
+import { oakCors } from "https://deno.land/x/cors/mod.ts";
 import authRoutes from "./routes/auth.ts";
 import todoRoutes from "./routes/todo.ts";
 import isAuth from "./utils/isAuth.ts";
@@ -55,6 +56,9 @@ app.use(async (ctx: Context, next) => {
     await next();
   }
 });
+
+// Cors
+app.use(oakCors({ origin: ORIGIN }));
 
 app.use(authRoutes.routes(), authRoutes.allowedMethods());
 app.use(isAuth, todoRoutes.routes(), todoRoutes.allowedMethods());
