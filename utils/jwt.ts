@@ -1,4 +1,7 @@
-import { validateJwt } from "https://deno.land/x/djwt/validate.ts";
+import {
+  validateJwt,
+  JwtValidation,
+} from "https://deno.land/x/djwt/validate.ts";
 import {
   makeJwt,
   setExpiration,
